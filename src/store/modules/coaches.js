@@ -20,14 +20,31 @@ const coachModule = {
                     'I am Julie and as a senior developer in a big tech company, I can help you get your first job or progress in your current role.',
                   hourlyRate: 30
                 }
-              ]
+              ],
+              selectedCoaches: null
         }
     },
-    mutations: {},
-    actions: {},
+    mutations: {
+      loadCoachDetails(state, payload) {
+        const coachId = payload
+        const selectedCoach = state.coaches.find(coach => coach.id === coachId)
+        state.selectedCoaches = selectedCoach
+      }
+    },
+    actions: {
+      loadCoachDetails(context, payload) {
+        context.commit('loadCoachDetails', payload)
+      }
+    },
     getters: {
       coaches(state) {
         return state.coaches
+      },
+      hasCoaches(state) {
+        return state.coaches && state.coaches.length > 0 
+      },
+      selectedCoaches(state) {
+        return state.selectedCoaches
       }
     }
 }
