@@ -1,43 +1,81 @@
 <template>
-    <section>
-        <ul>
-            <coach-detail-item v-for="coach in coaches"
-            :key="coach.id"
-            :id="coach.id"
-            :firstName="coach.firstName"
-            :lastName="coach.lastName"
-            :areas="coach.areas"
-            :description="coach.description"
-            :hourlyRate="coach.hourlyRate">
-            </coach-detail-item>
-        </ul>
-    </section>
+  <section>
+    <base-card>
+    <h2>{{ fullName }}</h2>
+    <h3>${{ rate }}/hour</h3>
+  </base-card>
+  </section>
+  <section>
+    <base-card>
+      <header>
+      <h2>Interested? Reach out now!</h2>
+      <base-button link :to="contactLink">Contact</base-button>
+      </header>
     <router-view></router-view>
-    <router-link to="/coaches/c1/contact">Contact</router-link>
+  </base-card>
+  </section>
+  <section>
+    <base-card>
+    <base-badge v-for="area in areas" :key="area" :type="area" :title="area"></base-badge>
+    <p>{{ description }}</p>
+  </base-card>
+  </section>
 </template>
 
 <script>
-import CoachDetailItem from '../../components/coaches/CoachDetailItem.vue'; 
-
-import { mapGetters } from 'vuex'
-
 export default {
-    props: ['coachId'],
-   components: { CoachDetailItem },
-   computed: {
-        ...mapGetters(['coaches']),
+  props: [ 'id' ],
+  data() {
+    return {
+      selectedCoach: null
+    }
+  },
+  computed: {
+    fullName() {
+      return this.selectedCoach.firstName + ' ' +  this.selectedCoach.lastName
     },
-  methods: {
-    loadCoach() {
-      this.$store.dispatch('loadCoachDetails', {coachId: this.coachId})
+    rate() {
+      return this.selectedCoach.hourlyRate
     },
+    areas() {
+      return this.selectedCoach.areas
+    },
+    description() {
+      return this.selectedCoach.description
+    },
+    contactLink() {
+      return this.$route.path + '/' + this.id + '/contact' 
+    }
   },
   created() {
-    this.loadCoach(this.coachId)
-  },
+    this.selectedCoach = this.$store.getters['coaches'].find(coach => coach.id === this.id)
+  }
 }
 </script>
 
 <style scoped>
+li {
+margin: 1rem 0;
+border: 1px solid #424242;
+border-radius: 12px;
+padding: 1rem;
+}
 
+h3 {
+font-size: 1.5rem;
+}
+
+h3,
+h4 {
+margin: 0.5rem 0;
+}
+
+div {
+margin: 0.5rem 0;
+}
+
+.actions {
+display: flex;
+justify-content: flex-end;
+}
 </style>
