@@ -21,20 +21,31 @@ const coachModule = {
                   hourlyRate: 30
                 }
               ],
-              selectedCoaches: null
+              selectedCoaches: [],
+              frontend: true,
+              backend: false,
+              career: true,
         }
     },
     mutations: {
-      loadCoachDetails(state, payload) {
-        const coachId = payload
-        const selectedCoach = state.coaches.find(coach => coach.id === coachId)
-        state.selectedCoaches = selectedCoach
-      }
+      filterCoaches(state) {
+        for (let i = 0; i < state.coaches.length; i++) {
+          if (state.frontend && state.coaches[i].areas[i] === 'frontend') { 
+            state.selectedCoaches.push(state.coaches[i]) 
+
+          } else if (state.backend && state.coaches[i].areas[i] === 'backend') { 
+            state.selectedCoaches.push(state.coaches[i]) 
+
+          } else if (state.career && state.coaches[i].areas[i] === 'career') { 
+            state.selectedCoaches.push(state.coaches[i]) 
+          } 
+        }
+      },
     },
     actions: {
-      loadCoachDetails(context, payload) {
-        context.commit('loadCoachDetails', payload)
-      }
+     filterCoaches(context) {
+      context.commit('filterCoaches')
+     }
     },
     getters: {
       coaches(state) {
@@ -42,6 +53,15 @@ const coachModule = {
       },
       hasCoaches(state) {
         return state.coaches && state.coaches.length > 0 
+      },
+      frontend(state) {
+        return state.frontend
+      },
+      backend(state) {
+        return state.backend
+      },
+      career(state) {
+        return state.career
       },
       selectedCoaches(state) {
         return state.selectedCoaches
