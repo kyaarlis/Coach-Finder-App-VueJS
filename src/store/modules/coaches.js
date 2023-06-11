@@ -21,31 +21,23 @@ const coachModule = {
                   hourlyRate: 30
                 }
               ],
-              selectedCoaches: [],
-              frontend: true,
-              backend: false,
-              career: true,
-        }
+              filters: {
+                frontend: true,
+                backend: true,
+                career: true,
+            },
+            form: {
+              firstName: '',
+              lastName: '',
+              areas: [],
+              description: '',
+              hourlyRate: null
+            }
+      }
     },
     mutations: {
-      filterCoaches(state) {
-        for (let i = 0; i < state.coaches.length; i++) {
-          if (state.frontend && state.coaches[i].areas[i] === 'frontend') { 
-            state.selectedCoaches.push(state.coaches[i]) 
-
-          } else if (state.backend && state.coaches[i].areas[i] === 'backend') { 
-            state.selectedCoaches.push(state.coaches[i]) 
-
-          } else if (state.career && state.coaches[i].areas[i] === 'career') { 
-            state.selectedCoaches.push(state.coaches[i]) 
-          } 
-        }
-      },
     },
     actions: {
-     filterCoaches(context) {
-      context.commit('filterCoaches')
-     }
     },
     getters: {
       coaches(state) {
@@ -54,17 +46,15 @@ const coachModule = {
       hasCoaches(state) {
         return state.coaches && state.coaches.length > 0 
       },
-      frontend(state) {
-        return state.frontend
+      filters(state) {
+        return state.filters
       },
-      backend(state) {
-        return state.backend
+      form(state) {
+        return state.form
       },
-      career(state) {
-        return state.career
-      },
-      selectedCoaches(state) {
-        return state.selectedCoaches
+      isCoach(state, _, rootGetters) {
+        const userId = rootGetters.userId
+        return state.coaches.some(coach => coach.id === userId)
       }
     }
 }

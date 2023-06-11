@@ -19,17 +19,13 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex'
 
 export default {
   emits: ['change-filter'],
   data() {
     return {
-      filters: {
-          frontend: true,
-          backend: true,
-          career: true,
-      }
+      ...mapGetters(['filters'])
     }
   },
   methods: {

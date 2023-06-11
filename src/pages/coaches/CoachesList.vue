@@ -8,7 +8,7 @@
       <base-card>
       <div class="controls">
         <base-button mode="outline">Refresh</base-button>
-        <base-button link to="/register">Register as a coach</base-button>
+        <base-button link to="/register" v-if="!isCoach">Register as a coach</base-button>
       </div>
         <ul v-if="hasCoaches">
             <coach-item v-for="coach in filteredCoaches"
@@ -38,14 +38,14 @@ export default {
     data() {
       return {
         activeFilters: {
-          frontend: true,
-          backend: true,
-          career: true,
-      }
+              frontend: true,
+              backend: true,
+              career: true,
+            }
       }
     },
     computed: {
-        ...mapGetters(['coaches', 'hasCoaches']),
+        ...mapGetters(['coaches', 'hasCoaches', 'isCoach']),
         filteredCoaches() {
           return this.coaches.filter(coach => {
             if (this.activeFilters.frontend && coach.areas.includes('frontend')) {

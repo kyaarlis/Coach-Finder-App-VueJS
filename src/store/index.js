@@ -7,12 +7,16 @@ const store = createStore({
     modules: { coachModule, requestModule },
     state() {
         return {
-
+            userId: 'c3'
         }
     },
     mutations: {},
     actions: {},
-    getters: {}
+    getters: {
+        userId(state) {
+            return state.userId
+        }
+    }
 })
 
 export default store
