@@ -73,11 +73,15 @@ const coachModule = {
       async getCoaches(context) {
         const response = await fetch(
           `https://coachfinder-ff141-default-rtdb.europe-west1.firebasedatabase.app/coaches.json`
-          )
+          )   
+          .catch((error) => {
+            console.log(error)
+          })
           const resData = await response.json()
 
           if (!response.ok) {
-            // err..
+            const error = new Error(resData.message || 'Failed to fetch!')
+            throw error
           }
 
           const coaches = []
