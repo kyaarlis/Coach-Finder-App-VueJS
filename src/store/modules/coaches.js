@@ -36,8 +36,65 @@ const coachModule = {
       }
     },
     mutations: {
+      registerCoach(state, payload) {
+        state.coaches.push(payload)
+      },
+      getCoaches(state, payload) {
+        state.coaches = payload
+      }
     },
     actions: {
+      async registerCoach(context, data) {
+        const userId = context.rootGetters.userId
+        const coachData = {
+            firstName: data.firstName,
+            lastName: data.lastName,
+            description: data.description,
+            hourlyRate: data.hourlyRate,
+            areas: data.areas
+        }
+
+      const response = await fetch(`https://coachfinder-ff141-default-rtdb.europe-west1.firebasedatabase.app/coaches/${userId}.json`, {
+        method: 'PUT',
+        body: JSON.stringify(coachData),
+      })
+
+      //const responseData = await response.json()
+
+      if(!response.ok) {
+        // err..
+      }
+
+      context.commit('registerCoach', {
+        ...coachData,
+        id: userId
+      })
+      },
+      async getCoaches(context) {
+        const response = await fetch(
+          `https://coachfinder-ff141-default-rtdb.europe-west1.firebasedatabase.app/coaches.json`
+          )
+          const resData = await response.json()
+
+          if (!response.ok) {
+            // err..
+          }
+
+          const coaches = []
+
+          for (const key in resData) {
+            const coach = {
+              id: key,
+              firstName: resData[key].firstName,  
+              lastName: resData[key].lastName,
+              description: resData[key].description,
+              hourlyRate: resData[key].hourlyRate,
+              areas: resData[key].areas
+            }
+            coaches.push(coach)
+          }
+        context.commit('getCoaches', coaches)
+      }
     },
     getters: {
       coaches(state) {

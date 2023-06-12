@@ -147,11 +147,9 @@ export default {
             this.formIsValid = false
           }
         },
-        submitForm() {
+         submitForm() {
           this.validateForm()
-          if (!this.formIsValid) {
-              return
-            }
+          if (this.formIsValid) {
               const formData = {
                 id: 'c3', 
                 firstName: this.firstName.val,
@@ -160,9 +158,13 @@ export default {
                 hourlyRate: this.hourlyRate.val,
                 areas: this.areas.val
             }
-            
-            this.coaches.push(formData)
+
+            this.$store.dispatch('registerCoach', formData)
+
             this.$router.replace('/coaches') 
+            } else {
+              return
+            }
         }
     }
 }
