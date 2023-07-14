@@ -1,4 +1,5 @@
 <template>
+<div>
   <base-dialog 
   :show="!!error" 
   title="An error occured!"
@@ -14,7 +15,7 @@
     <section>
       <base-card>
       <div class="controls">
-        <base-button mode="outline" @click="setCoaches">Refresh</base-button>
+        <base-button mode="outline" @click="setCoaches(true)">Refresh</base-button>
         <base-button link to="/register" v-if="!isCoach && !loading">Register as a coach</base-button>
       </div>
       <base-spinner v-if="loading"></base-spinner>
@@ -32,6 +33,7 @@
         <h3 v-else>No coaches are available at the moment..</h3>
       </base-card>
     </section>
+</div>
 </template>
 
 <script>
@@ -78,10 +80,10 @@ export default {
     setFilters(updatedFilters) {
       this.activeFilters = updatedFilters
     },
-    async setCoaches() {
+    async setCoaches(refresh = false) {
         this.loading = true
         try {
-          await this.$store.dispatch('getCoaches')
+          await this.$store.dispatch('getCoaches', {forceRefresh: refresh})
         } catch (error) {
           this.error = error.message || 'Some things went south..'
         }

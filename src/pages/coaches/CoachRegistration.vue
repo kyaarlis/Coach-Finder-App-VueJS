@@ -1,7 +1,7 @@
 <template>
-  <section>
-     <coach-form></coach-form>
-  </section>
+    <section>
+      <coach-form></coach-form>
+    </section>
 </template>
 
 <script>

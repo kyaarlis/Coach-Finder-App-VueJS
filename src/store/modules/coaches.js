@@ -1,20 +1,13 @@
 const coachModule = {
     state() {
         return {
-            coaches: [
-              ],
+            coaches: [],
               filters: {
                 frontend: true,
                 backend: true,
                 career: true,
             },
-            form: {
-              firstName: '',
-              lastName: '',
-              areas: [],
-              description: '',
-              hourlyRate: null
-            }
+            lastFetch: null
       }
     },
     mutations: {
@@ -23,7 +16,10 @@ const coachModule = {
       },
       getCoaches(state, payload) {
         state.coaches = payload
-      }
+      },
+      setFetchTimestamp(state) {
+        state.lastFetch = new Date().getTime()
+      },
     },
     actions: {
       async registerCoach(context, data) {
@@ -50,7 +46,11 @@ const coachModule = {
         id: userId
       })
       },
-      async getCoaches(context) {
+      async getCoaches(context, payload) {
+        if (!payload.forceRefresh && !context.getters.shouldUpdate) {
+          return  
+        }
+
         const response = await fetch(
           `https://coachfinderdb-default-rtdb.europe-west1.firebasedatabase.app/coaches.json`
           )   
@@ -78,6 +78,7 @@ const coachModule = {
             coaches.push(coach)
           }
         context.commit('getCoaches', coaches)
+        context.commit('setFetchTimestamp')
       }
     },
     getters: {
@@ -90,12 +91,18 @@ const coachModule = {
       filters(state) {
         return state.filters
       },
-      form(state) {
-        return state.form
-      },
       isCoach(state, _, rootGetters) {
         const userId = rootGetters.userId
         return state.coaches.some(coach => coach.id === userId)
+      },
+      shouldUpdate(state) {
+        const lastFetch = state.lastFetch
+        if (!lastFetch) {
+          return true
+        } else {
+          const currentTime = new Date().getTime()
+          return (currentTime - lastFetch) / 1000 > 60
+        }
       }
     }
 }
