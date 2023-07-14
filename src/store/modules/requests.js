@@ -14,35 +14,41 @@ const requestModule = {
     },
     actions: {
        async addRequest(context, payload) {
-            const newRequest = {
-                id: new Date().toISOString,
-                coachId: payload.coachId,
+            const newRequest = {   
+              coachId: payload.coachId, 
                 userEmail: payload.email,
                 userMessage: payload.message
             }
         
-              const response = await fetch(`https://coachfinder-ff141-default-rtdb.europe-west1.firebasedatabase.app/requests/${newRequest.coachId}.json`, {
-                method: 'PUT',
+              const response = await fetch(`https://coachfinderdb-default-rtdb.europe-west1.firebasedatabase.app/requests/${newRequest.coachId}.json`, {
+                method: 'POST',
                 body: JSON.stringify(newRequest),
               })
         
-              //const responseData = await response.json()
-        
+              const responseData = await response.json()
+
               if(!response.ok) {
-                // err..
+                const error = new Error(responseData.message || 'Failed to send request!')
+                throw error
               }
 
+              newRequest.id  = responseData.name
+              newRequest.coachId = payload.coachId
+        
             context.commit('addRequest', newRequest)
         },
         async getRequests(context) {
+          const coachId = context.rootGetters.userId
+
             const response = await fetch(
-                `https://coachfinder-ff141-default-rtdb.europe-west1.firebasedatabase.app/requests.json`
+              `https://coachfinderdb-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`
                 )   
                 .catch((error) => {
                   console.log(error)
                 })
                 const resData = await response.json()
       
+                // error handling
                 if (!response.ok) {
                   const error = new Error(resData.message || 'Failed to fetch!')
                   throw error
@@ -53,21 +59,26 @@ const requestModule = {
                 for (const key in resData) {
                   const request = {
                     id: key,
-                    message: resData[key].message,  
-                    email: resData[key].email,
+                    coachId: coachId,
+                    message: resData[key].userMessage,  
+                    email: resData[key].userEmail,
                   }
                   requests.push(request)
-                }
-              context.commit('getCoaches', requests)
+                } 
+               
+              context.commit('getRequests', requests)   
         }
     },
     getters: {
-        requests(state, _, _2, rootGetters) {
-            const coachId = rootGetters.userId
-            return state.requests.filter(req => req.coachId === coachId)
-        },
-        hasRequests(_, getters) {
-            return getters.requests && getters.requests.length > 0 
+        // requests(state, _, _2, rootGetters) {
+        //     const coachId = rootGetters.userId
+        //     return state.requests.filter(req => req.coachId === coachId)
+        // },
+        requests(state) {
+          return state.requests
+      },
+        hasRequests(state) {
+            return state.requests && state.requests.length > 0 
         }
     }
 }

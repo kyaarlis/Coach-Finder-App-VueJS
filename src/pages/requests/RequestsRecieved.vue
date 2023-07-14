@@ -1,4 +1,11 @@
 <template>
+        <base-dialog 
+        :show="!!error" 
+        title="An error occured!"
+        @close="close"
+        >
+            <p>{{ error }}</p>
+        </base-dialog>
     <section>
         <base-card>
             <header>
@@ -6,12 +13,13 @@
             </header>
     </base-card>
     <base-card>
-        <ul v-if="hasRequests">
+        <base-spinner v-if="loading"></base-spinner>
+        <ul v-else-if="hasRequests && !loading">
             <request-item
             v-for="req in requests"
             :key="req.id"
-            :message="req.userMessage"
-            :email="req.userEmail"
+            :message="req.message"
+            :email="req.email"
             ></request-item>
         </ul>  
 
@@ -21,15 +29,45 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-
 import RequestItem from '../../components/requests/RequestItem.vue'
 
 export default {
     components: { RequestItem },
-    computed: {
-        ...mapGetters(['requests', 'hasRequests'])
+    data() {
+        return {
+            loading: false,
+            error: null,
+       
+        }
     },
+    computed: {
+        requests() {
+            return this.$store.getters['requests']
+        },
+        hasRequests() {
+            return this.$store.getters['hasRequests']
+        }
+    },
+    methods: {
+        async loadRequests() {
+            this.loading = true
+            try {
+                await this.$store.dispatch('getRequests')
+            } catch (error) {
+                this.error = error.message || 'Some things went south..'
+            }
+            this.loading = false
+           
+        },
+        close() {
+            this.error = null
+        }
+    },
+    created() {
+        this.loadRequests()
+        console.log('Requests array: ', this.requests)
+        console.log('Has requests: ', this.hasRequests)
+    }
 }
 </script>
 
