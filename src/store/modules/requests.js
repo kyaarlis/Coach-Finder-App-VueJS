@@ -40,8 +40,10 @@ const requestModule = {
         async getRequests(context) {
           const coachId = context.rootGetters.userId
 
+          const token = context.rootGetters.token
+
             const response = await fetch(
-              `https://coachfinderdb-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json`
+              `https://coachfinderdb-default-rtdb.europe-west1.firebasedatabase.app/requests/${coachId}.json?auth=` + token
                 )   
                 .catch((error) => {
                   console.log(error)
