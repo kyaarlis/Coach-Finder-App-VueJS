@@ -74,8 +74,10 @@ export default {
             try {
                 if (this.mode === 'login') {
                 await this.$store.dispatch('login', actionPayload)
+                this.$router.push('/')
                 } else {
                    await this.$store.dispatch('signup', actionPayload)
+                   this.$router.push('/')
                 }
             } catch (error) {
                 this.error = error.message || 'Some things went south..'
