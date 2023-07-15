@@ -7,6 +7,7 @@ import ContactCouch from './pages/requests/ContactCouch'
 
 import RequestsRecieved from './pages/requests/RequestsRecieved'
 import NotFound from './pages/NotFound'
+import userAuth from './pages/auth/userAuth.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -37,6 +38,10 @@ const router = createRouter({
             name: 'requests',
             path: '/requests',
             component: RequestsRecieved
+        },
+        {
+            path: '/auth',
+            component: userAuth
         },
         { path: '/:notFound(.*)', component: NotFound }
     ]
