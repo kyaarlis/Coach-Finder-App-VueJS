@@ -9,6 +9,8 @@ import RequestsRecieved from './pages/requests/RequestsRecieved'
 import NotFound from './pages/NotFound'
 import userAuth from './pages/auth/userAuth.vue'
 
+import store from './store/index.js'
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -32,19 +34,32 @@ const router = createRouter({
         {
             name: 'register',
             path: '/register',
-            component: CoachRegistration
+            component: CoachRegistration,
+            meta: {requiresAuth: true}
         },
         {
             name: 'requests',
             path: '/requests',
-            component: RequestsRecieved
+            component: RequestsRecieved,
+            meta: {requiresAuth: true}
         },
         {
             path: '/auth',
-            component: userAuth
+            component: userAuth,
+            meta: {requiresNoAuth: true}
         },
         { path: '/:notFound(.*)', component: NotFound }
     ]
+})
+
+router.beforeEach( (to, _, next) => {
+    if (to.meta.requiresAuth && !store.getters.userAuthStatus) {
+        next('/auth')
+    } else if (to.meta.requiresNoAuth && store.getters.userAuthStatus) {
+        next('/coaches')
+    } else {
+        next()
+    }
 })
 
 export default router
