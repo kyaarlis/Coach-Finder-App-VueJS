@@ -8,7 +8,7 @@ const store = createStore({
     modules: { 
         coachModule, 
         requestModule,
-        auth: authModule 
+        authModule 
     }
 })
 

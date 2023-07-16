@@ -6,11 +6,14 @@
           <li>
             <router-link to="/coaches">Coaches</router-link>
           </li>
-          <li v-if="token">
+          <li v-if="userAuthStatus">
             <router-link to="/requests">Requests</router-link>
           </li>
           <li v-else>
             <router-link to="/auth">Login</router-link>
+          </li>
+          <li v-if="userAuthStatus">
+            <base-button @click="logout">Logout</base-button>
           </li>
         </ul>
       </nav>   
@@ -22,7 +25,13 @@ import { mapGetters } from 'vuex'
 
 export default {
   computed: {
-    ...mapGetters(['token']),
+    ...mapGetters(['token', 'userAuthStatus']),
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch('logout')
+      this.$router.replace('/')
+    }
   }
 }
 </script>

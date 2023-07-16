@@ -93,10 +93,6 @@ const coachModule = {
       filters(state) {
         return state.filters
       },
-      isCoach(state, _, rootGetters) {
-        const userId = rootGetters.userId
-        return state.coaches.some(coach => coach.id === userId)
-      },
       shouldUpdate(state) {
         const lastFetch = state.lastFetch
         if (!lastFetch) {

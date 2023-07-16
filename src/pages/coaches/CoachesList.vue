@@ -16,8 +16,8 @@
       <base-card>
       <div class="controls">
         <base-button mode="outline" @click="setCoaches(true)">Refresh</base-button>
-        <base-button link to="/register" v-if="isCoach && !loading && token">Register as a coach</base-button>
-        <base-button link to="/auth" v-if="!token">Login</base-button>
+        <base-button link to="/register" v-if="!isCoach && !loading && userAuthStatus">Register as a coach</base-button>
+        <base-button link to="/auth?redirect=register" v-if="!userAuthStatus">Login to Register as Coach</base-button>
       </div>
       <base-spinner v-if="loading"></base-spinner>
         <ul v-else-if="hasCoaches">
@@ -59,7 +59,7 @@ export default {
       }
     },
     computed: {
-        ...mapGetters(['coaches', 'isCoach', 'token']),
+        ...mapGetters(['coaches', 'userAuthStatus', 'userId']),
         hasCoaches() {
           return !this.loading && this.$store.getters['hasCoaches']
         },
@@ -76,7 +76,10 @@ export default {
             }
           return false
           })
-        }
+        },
+        isCoach() {
+        return this.coaches.some(coach => coach.id === this.userId)
+      }
     },
     methods: {
     setFilters(updatedFilters) {
@@ -97,8 +100,7 @@ export default {
     }
   },
   created() {
-    this.setCoaches(),
-    console.log(this.coaches)
+    this.setCoaches()
   }
 }
 </script>
