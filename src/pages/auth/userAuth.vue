@@ -17,7 +17,7 @@
 
             <div class="form-control">
                 <label for="passwd">Password</label>
-                <input type="text" id="passwd" v-model.trim="password">
+                <input type="password" id="passwd" v-model.trim="password">
             </div>
 
             <p v-if="!formIsValid">Please enter <b>E-Mail</b> or the password must be at least 6 characters long!</p>
