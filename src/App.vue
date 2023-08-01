@@ -9,11 +9,22 @@
 
 <script>
 import TheHeader from './components/TheHeader.vue';
+import { mapGetters } from 'vuex';
 
 export default {    
     components: { TheHeader },
     created() {
       this.$store.dispatch('autoLogin')
+    },
+    computed: {
+      ...mapGetters(['autoLogout'])
+    },
+    watch: {
+      autoLogout(currValue, oldValue) {
+      if (currValue && currValue !== oldValue) {
+        this.$router.replace('/')
+      }
+      }
     }
 }
 

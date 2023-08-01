@@ -7,5 +7,8 @@ export default {
     },
     userAuthStatus(state) {
         return !!state.token
+    },
+    didAutoLogout(state) {
+        return state.autoLogout
     }
 }
