@@ -17,11 +17,11 @@ export default {
       this.$store.dispatch('autoLogin')
     },
     computed: {
-      ...mapGetters(['autoLogout'])
+      ...mapGetters(['didAutoLogout'])
     },
     watch: {
-      autoLogout(currValue, oldValue) {
-      if (currValue && currValue !== oldValue) {
+      didAutoLogout(curValue, oldValue) {
+      if (curValue && curValue !== oldValue) {
         this.$router.replace('/')
       }
       }
