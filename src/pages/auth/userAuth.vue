@@ -12,12 +12,12 @@
         <form @submit.prevent="submitForm">
             <div class="form-control">
                 <label for="email">E-Mail</label>
-                <input type="email" id="email" v-model.trim="email">
+                <input type="email" autocomplete="username" id="email" v-model.trim="email">
             </div>
 
             <div class="form-control">
                 <label for="passwd">Password</label>
-                <input type="password" id="passwd" v-model.trim="password">
+                <input type="password" autocomplete="current-password" id="passwd" v-model.trim="password">
             </div>
 
             <p v-if="!formIsValid">Please enter <b>E-Mail</b> or the password must be at least 6 characters long!</p>

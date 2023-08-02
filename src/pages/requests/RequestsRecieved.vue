@@ -67,8 +67,6 @@ export default {
     },
     created() {
         this.loadRequests()
-        console.log('Requests array: ', this.requests)
-        console.log('Has requests: ', this.hasRequests)
     }
 }
 </script>

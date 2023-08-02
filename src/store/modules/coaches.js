@@ -77,7 +77,7 @@ const coachModule = {
               hourlyRate: resData[key].hourlyRate,
               areas: resData[key].areas
             }
-            coaches.push(coach)
+            coaches.unshift(coach)
           }
         context.commit('getCoaches', coaches)
         context.commit('setFetchTimestamp')

@@ -15,6 +15,7 @@ export default {
     components: { TheHeader },
     created() {
       this.$store.dispatch('autoLogin')
+      this.$store.dispatch('getRequests')
     },
     computed: {
       ...mapGetters(['didAutoLogout'])

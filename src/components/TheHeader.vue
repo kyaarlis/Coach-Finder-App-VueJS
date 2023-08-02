@@ -7,7 +7,10 @@
             <router-link to="/coaches">Coaches</router-link>
           </li>
           <li v-if="userAuthStatus">
-            <router-link to="/requests">Requests</router-link>
+            <router-link to="/requests">
+              Requests
+              <span class="requestAmount" v-if="checkCurrRoute">{{ requestsCount }}</span>
+            </router-link>
           </li>
           <li v-else>
             <router-link to="/auth">Login</router-link>
@@ -24,14 +27,34 @@
 import { mapGetters } from 'vuex'
 
 export default {
+  data() {
+    return {
+    }
+  },
   computed: {
-    ...mapGetters(['token', 'userAuthStatus']),
+    ...mapGetters(['token', 'userAuthStatus', 'requests', 'hasRequests', 'userAuthStatus']),
+    requestsCount() {
+      if (!this.userAuthStatus) {
+        return 0
+      }
+      return this.requests.length
+    },
+    checkCurrRoute() {
+      if (this.$route.path === '/requests') {
+        return false
+      }
+      return true
+    }
   },
   methods: {
     logout() {
       this.$store.dispatch('logout')
       this.$router.replace('/')
-    }
+    },
+  },
+  created() { 
+    console.log('Requests length: ' + this.requests.length)
+  
   }
 }
 </script>
@@ -94,5 +117,12 @@ header ul {
 
 li {
   margin: 0 0.5rem;
+}
+
+.requestAmount {
+  border: 1.5px solid;
+  border-radius: 10%;
+  padding: 2px;
+  /* background-color: white; */
 }
 </style>
